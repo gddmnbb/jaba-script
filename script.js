@@ -8,36 +8,33 @@ let adaptive = prompt('Нужен ли адаптив на сайте?').toLocal
 let [service1, serivcePrice1] = [prompt('Какой дополнительный тип услуги нужен?'), parseInt(prompt('Сколько это будет стоить?'))];
 let [service2, serivcePrice2] = [prompt('Какой дополнительный тип услуги нужен?'), parseInt(prompt('Сколько это будет стоить?'))];
 
-let fullPrice = screenPrice+serivcePrice1+serivcePrice2;
-let servicePercentPrice = parseInt(fullPrice - fullPrice * (rollback / 100))
+const getAllServicePrices = () => serivcePrice1+serivcePrice2;
+const getFullPrice = () => screenPrice + getAllServicePrices();
+const getServicePercentPrices = () => parseInt(getFullPrice() - getFullPrice() * (rollback / 100));
 
-console.log(typeof title);
-console.log(typeof fullPrice);
-console.log(typeof adaptive);
+let allServicePrices = getAllServicePrices();
+let fullPrice = getFullPrice();
+let servicePercentPrice = getServicePercentPrices();
 
-console.log(screens.length);
-console.log(`Стоимость верстки экранов ${screenPrice} гривен`);
-console.log(`Стоимость разработки сайтов ${fullPrice} гривен`);
-console.log(screens.toLocaleLowerCase().split(', '));
+const getTitle = () => title.trim().charAt(0).toUpperCase() + title.trim.slice(1);
 
-console.log(servicePercentPrice);
+const getRollbackMessage = () => {
+    let sale;
+    if(fullPrice >= 30000) sale = 10;
+    else if(30000 > fullPrice >= 15000) sale = 5;
+    else if(15000 > fullPrice) sale = 0;
+    else if(fullPrice < 0) sale = -1;
 
-let sale;
-if(fullPrice >= 30000) {
-    sale = 10;
-} else if(30000 > fullPrice >= 15000) {
-    sale = 5;
-} else if(15000 > fullPrice) {
-    sale = 0;
-} else if(fullPrice < 0) {
-    sale = -1;
+    if(sale === -1)
+        return 'дурак что ле';
+    else if(sale === 0)
+        return 'Скидка не предусмотрена';
+    else
+        return `Даем скидку ${sale}%`;
 }
 
-if(sale === -1) {
-    console.log('дурак что ле');
-} else if(sale === 0) {
-    console.log('Скидка не предусмотрена');
-} else {
-    console.log(`Даем скидку ${sale}%`);
-
-}
+// Log zone
+// console.log(show);
+console.log(screens.split(','));
+console.log(getRollbackMessage());
+console.log(getServicePercentPrices());
