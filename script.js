@@ -4,11 +4,19 @@ let screenPrice = parseInt(prompt('Сколько будет стоить дан
 let rollback = 69;
 let adaptive = prompt('Нужен ли адаптив на сайте?').toLocaleLowerCase() === "да" ? true : false;
 
-// Serivce
-let [service1, serivcePrice1] = [prompt('Какой дополнительный тип услуги нужен?'), parseInt(prompt('Сколько это будет стоить?'))];
-let [service2, serivcePrice2] = [prompt('Какой дополнительный тип услуги нужен?'), parseInt(prompt('Сколько это будет стоить?'))];
+let servicePrice = 0;
 
-const getAllServicePrices = () => serivcePrice1+serivcePrice2;
+// Serivce
+// let [service1, serivcePrice1] = [prompt('Какой дополнительный тип услуги нужен?'), parseInt(prompt('Сколько это будет стоить?'))];
+// let [service2, serivcePrice2] = [prompt('Какой дополнительный тип услуги нужен?'), parseInt(prompt('Сколько это будет стоить?'))];
+
+let userInput;
+do {
+    userInput = prompt('Сколько это будет стоить?');
+    if(userInput && !isNaN(userInput)) servicePrice += parseInt(userInput);
+} while (userInput);
+
+const getAllServicePrices = () => servicePrice;
 const getFullPrice = () => screenPrice + getAllServicePrices();
 const getServicePercentPrices = () => parseInt(getFullPrice() - getFullPrice() * (rollback / 100));
 
@@ -18,7 +26,7 @@ let servicePercentPrice = getServicePercentPrices();
 
 const getTitle = () => title.trim().charAt(0).toUpperCase() + title.trim.slice(1);
 
-const getRollbackMessage = () => {
+const getRollbackMessage = () => {       
     let sale;
     if(fullPrice >= 30000) sale = 10;
     else if(30000 > fullPrice >= 15000) sale = 5;
