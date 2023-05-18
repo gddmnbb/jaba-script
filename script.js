@@ -1,71 +1,45 @@
-const isNum = (str) => typeof str != "string" ? false : !isNaN(str) && !isNaN(parseFloat(str))
+const books = document.querySelector('.books');
 
-const appData = {
-    title: '',
-    screens: '',
-    screenPrice: 0,
-    rollback: 69,
-    adaptive: false,
-    servicePrice: 0,
+const sortedBooks = Array.from(books.children).sort((a, b) => {
+    const aIndex = parseInt(a.children[0].textContent.trim().slice(6,7));
+    const bIndex = parseInt(b.children[0].textContent.trim().slice(6,7));
+    return aIndex-bIndex;
+});
 
-    getAllServicePrices() {
-        return this.servicePrice;
-    },
-    // getAllServicePrices: this.servicePrice,
-    getFullPrice() {
-        return this.screenPrice + this.getAllServicePrices();
-    },
-    getServicePercentPrices() {
-        return parseInt(this.fullPrice - this.fullPrice * (this.rollback / 100));
-    },
+Array.from(books.children).forEach(el => books.removeChild(el));
+sortedBooks.forEach(el => books.appendChild(el));
 
-    getTitle: () => this.title.trim().charAt(0).toUpperCase() + this.title.trim().slice(1),
+document.body.style.backgroundImage = 'url(./image/you-dont-know-js.jpg)';
 
-    getRollbackMessage: () => {
-        let sale;
-        if(this.fullPrice >= 30000) sale = 10;
-        else if(30000 > this.fullPrice >= 15000) sale = 5;
-        else if(15000 > this.fullPrice) sale = 0;
-        else if(this.fullPrice < 0) sale = -1;
+books.children[2].querySelector('a').textContent = 'Книга 3. this и Прототипы Объектов';
 
-        if(sale === -1)
-            return 'дурак что ле';
-        else if(sale === 0)
-            return 'Скидка не предусмотрена';
-        else
-            return `Даем скидку ${sale}%`;
-    },
+document.querySelector('.adv').remove();
 
-    asking() {
-        let userInput;
-        do {
-            userInput = prompt('Сколько это будет стоить?');
-            if(userInput && isNum(userInput)) this.servicePrice += parseInt(userInput);
-        } while (userInput);
-    },
+// Хз где ваши эти индексы искать
+function sortChapters(book) {
+    const chapters = books.children[book-1].querySelector('ul');
+    const chapterChidlrens = Array.from(chapters.children)
+    let sortedChapters = chapterChidlrens.slice(0, 2);
+    const a = chapterChidlrens.filter(el => el.innerHTML.startsWith('Глава')).sort((a, b) => {
+        const aIndex = parseInt(a.textContent.trim().slice(6,7));
+        const bIndex = parseInt(b.textContent.trim().slice(6,7));
+        return aIndex-bIndex;
+    });
+    const b = chapterChidlrens.filter(el => el.innerHTML.startsWith('Приложение')).sort((a, b) => {
+        const aIndex = parseInt(a.textContent.trim().slice(11,12));
+        const bIndex = parseInt(b.textContent.trim().slice(11,12));
+        return aIndex-bIndex;
+    });
+    sortedChapters = [...sortedChapters, ...a, ...b];
 
-    ask(text, isText) {
-        const promptResult = prompt(text);
-
-        if(isText)
-            return isNum(promptResult) ? this.ask(text, isText) : promptResult;
-        else
-            return isNum(promptResult) ? parseInt(promptResult) : this.ask(text, isText);
-    },
-
-    start() {
-        this.title = this.ask('Как называется ваш проект?', true);
-        this.screens = this.ask('Какие типы экранов нужно разработать?', true);
-        this.screenPrice = this.ask('Сколько будет стоить данная работа', false);
-        this.adaptive = this.ask('Нужен ли адаптив на сайте?', true).toLocaleLowerCase() === "да" ? true : false;
-
-        this.asking();
-        this.logger();
-    },
-
-    logger() {
-        for (const key in this) console.log(key);
-    }
+    chapterChidlrens.forEach(el => chapters.removeChild(el));
+    sortedChapters.forEach(el => chapters.appendChild(el));
 }
+sortChapters(2);
+sortChapters(5);
 
-appData.start();
+const sixthBook = books.children[5];
+const sixthBookChapters = sixthBook.querySelector('ul');
+const chapter = document.createElement('li');
+chapter.textContent = 'Глава 8: За пределами ES6';
+sixthBookChapters.children[sixthBookChapters.children.length-2].after(chapter)
