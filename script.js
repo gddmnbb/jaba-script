@@ -1,3 +1,5 @@
+const isNum = (str) => typeof str != "string" ? false : !isNaN(str) && !isNaN(parseFloat(str))
+
 const appData = {
     title: '',
     screens: '',
@@ -38,23 +40,31 @@ const appData = {
         let userInput;
         do {
             userInput = prompt('Сколько это будет стоить?');
-            if(userInput && !isNaN(userInput)) this.servicePrice += parseInt(userInput);
+            if(userInput && isNum(userInput)) this.servicePrice += parseInt(userInput);
         } while (userInput);
     },
 
+    ask(text, isText) {
+        const promptResult = prompt(text);
+
+        if(isText)
+            return isNum(promptResult) ? this.ask(text, isText) : promptResult;
+        else
+            return isNum(promptResult) ? parseInt(promptResult) : this.ask(text, isText);
+    },
+
     start() {
-        this.title = prompt('Как называется ваш проект?');
-        this.screens = prompt('Какие типы экранов нужно разработать?');
-        this.screenPrice = parseInt(prompt('Сколько будет стоить данная работа'));
-        this.adaptive = prompt('Нужен ли адаптив на сайте?').toLocaleLowerCase() === "да" ? true : false;
+        this.title = this.ask('Как называется ваш проект?', true);
+        this.screens = this.ask('Какие типы экранов нужно разработать?', true);
+        this.screenPrice = this.ask('Сколько будет стоить данная работа', false);
+        this.adaptive = this.ask('Нужен ли адаптив на сайте?', true).toLocaleLowerCase() === "да" ? true : false;
 
         this.asking();
         this.logger();
     },
 
     logger() {
-        for (const key in this)
-            console.log(key);
+        for (const key in this) console.log(key);
     }
 }
 
